@@ -31,6 +31,28 @@ class User(UserMixin, Model):
             raise ValueError("User already exists")
 
 
+class Entry(Model):
+    title = CharField()
+    date = DateTimeField()
+    time = IntegerField()
+    learned = TextField()
+    resources = TextField()
+
+    class Meta:
+        database = DATABASE
+
+    @classmethod
+    def create_entry(cls, title, date, time, learn, resources):
+        cls.create(
+            title=title,
+            date=date,
+            time=time,
+            learn=learn,
+            resources=resources
+        )
+
+
+
 class Post(Model):
     timestamp = DateTimeField(datetime.datetime.now)
     user = ForeignKeyField(
