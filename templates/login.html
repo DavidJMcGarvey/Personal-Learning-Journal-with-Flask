@@ -1,0 +1,13 @@
+{% from 'macros.html' import render_field %}
+
+<form method="POST" action="" class="form">
+	{{ form.hidden_tag() }}
+	{% for field in form %}
+        {{ render_field(field) }}
+	{% endfor %}
+	<button class="button icon-center" type="submit" id="submit">Login!</button>
+</form>
+
+<p>Not registered yet? </p>
+<button class="button icon-center"><a href="/register/" class="button icon-center">Register!</a></button>
+

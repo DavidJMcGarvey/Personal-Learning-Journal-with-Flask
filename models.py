@@ -1,7 +1,7 @@
 import datetime
 
 from flask_bcrypt import generate_password_hash
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from peewee import *
 
 DATABASE = SqliteDatabase('users_entries.db')
@@ -42,32 +42,18 @@ class Entry(Model):
         database = DATABASE
 
     @classmethod
-    def create_entry(cls, title, date, time, learn, resources):
+    def create_entry(cls, title, date, time, learned, resources):
         cls.create(
             title=title,
             date=date,
             time=time,
-            learn=learn,
+            learned=learned,
             resources=resources
         )
 
 
-
-class Post(Model):
-    timestamp = DateTimeField(datetime.datetime.now)
-    user = ForeignKeyField(
-        model=User,
-        backref='posts'
-    )
-    content = TextField()
-
-    class Meta:
-        database = DATABASE
-        order_by = ('-timestamp',)
-
-
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Post], safe=True)
+    DATABASE.create_tables([User, Entry], safe=True)
     DATABASE.close()
 
