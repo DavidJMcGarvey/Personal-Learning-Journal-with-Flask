@@ -84,6 +84,7 @@ footer {
 
 
 
+
 /* ==========================================================================
    Typography
    ========================================================================== */
@@ -232,6 +233,32 @@ input[type=submit] {
 
 
 
+/* ==========================================================================
+   Davey Specials
+   ========================================================================== */
+
+a.button.icon-left.center {
+	position: center;
+	alignment: center;
+}
+
+.notification {
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 4px;
+  color: black;
+	margin-bottom: 20px;
+}
+.success {
+  background: #70DA8B;
+  color: black;
+	margin-bottom: 20px;
+}
+.error {
+  background: #FFE6B2;
+  color: #C5A14E;
+  margin-bottom: 20px;
+}
 
 
 

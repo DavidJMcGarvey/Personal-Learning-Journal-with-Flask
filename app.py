@@ -41,7 +41,8 @@ def login():
         else:
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
-                flash("You've been logged in! :)", "success")
+                flash("You've been logged in with your email, {}! :)"
+                      .format(form.email.data), "success")
                 return redirect(url_for('index'))
     return render_template('login.html', form=form)
 
@@ -57,11 +58,19 @@ def register():
                 password=form.password.data,
             )
         except ValueError:
-            flash("User {} already exists :( ".format(form.email.data))
+            flash("User {} already exists :( ".format(form.email.data),
+                  "success")
         else:
-            flash("User {} create :) ".format(form.email.data))
+            flash("User {} create :) ".format(form.email.data), "success")
             return redirect(url_for('index'))
     return render_template('register.html', form=form)
+
+
+@app.route('/logout', methods=('GET', 'POST'))
+def logout():
+    logout_user()
+    flash("You've been logged out. Come back soon!", "success")
+    return redirect(url_for('index'))
 
 
 @app.route('/')
@@ -78,7 +87,7 @@ def list_entries():
 
 
 @app.route('/entries/new', methods=('GET', 'POST'))
-# @login_required
+@login_required
 def entry_create():
     form = forms.EntryForm()
     try:
@@ -96,24 +105,24 @@ def entry_create():
     return render_template('new.html', form=form)
 
 
-@app.route('/entries/<title_id>')
+@app.route('/entries/<user_id>', methods=('GET', 'POST'))
 # @login_required
-def entry_detail(title_id=None):
-    entry = models.Entry.get(models.Entry.title == title_id)
-    return render_template('detail.html', entry=entry)
+def entry_detail(user_id=None):
+    user = models.User.get(models.User.username == user_id)
+    return render_template('detail.html', user=user)
 
 
-@app.route('/entries/<title_id>/edit')
+@app.route('/entries/<user_id>/edit', methods=('GET', 'POST'))
 # @login_required
-def entry_edit(title_id):
-    entry = models.Entry.get(models.Entry.title == title_id)
-    return render_template('edit.html', entry=entry)
+def entry_edit(user_id):
+    user = models.User.get(models.User.username == user_id)
+    return render_template('edit.html', user=user)
 
 
-@app.route('/entries/<title_id>/delete')
+@app.route('/entries/<user_id>/delete', methods=('GET', 'POST'))
 # @login_required
-def entry_delete(title_id):
-    entry = models.Entry.get(models.Entry.title == title_id)
+def entry_delete(user_id):
+    entry = models.User.get(models.User.username == user_id)
     return render_template('delete.html', entry=entry)
 
 
