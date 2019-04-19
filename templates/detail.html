@@ -23,7 +23,7 @@
             <div class="container">
                 <div class="entry-list single">
                     <article>
-                        <h1>The best day I’ve ever had</h1>
+                        <h1>{{ title }}</h1>
                         <time datetime="2016-01-31">January 31, 2016</time>
                         <div class="entry">
                             <h3>Time Spent: </h3>
@@ -48,7 +48,7 @@
             </div>
             <div class="edit">
 
-                <p><a href="/entries/{{ username }}/edit">Edit Entry</a></p>
+                <p><a href="/entries/{{ models.User.username }}/edit">Edit Entry</a></p>
             </div>
         </section>
         <footer>

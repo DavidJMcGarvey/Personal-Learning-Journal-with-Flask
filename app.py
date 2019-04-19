@@ -51,7 +51,7 @@ def after_request(response):
     return response
 
 
-@app.route('/login/', methods=('GET', 'POST'))
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     form = forms.LoginForm()
     if form.validate_on_submit():
@@ -70,7 +70,7 @@ def login():
     return render_template('login.html', form=form)
 
 
-@app.route('/register/', methods=('GET', 'POST'))
+@app.route('/register/', methods=['GET', 'POST'])
 def register():
     form = forms.RegisterForm()
     if form.validate_on_submit():
@@ -90,7 +90,7 @@ def register():
     return render_template('register.html', form=form)
 
 
-@app.route('/logout/', methods=('GET', 'POST'))
+@app.route('/logout/', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
@@ -100,18 +100,18 @@ def logout():
 
 @app.route('/')
 def index():
-    user = models.User.select()
-    return render_template('index.html', user=user)
+    form = models.Entry.select()
+    return render_template('index.html', form=form)
 
 
-@app.route('/and/entries/', methods=('GET', 'POST'))
+@app.route('/entries/', methods=['GET', 'POST'])
 @login_required
 def list_entries():
     entries = models.Entry.select()
     return render_template('detail.html', entries=entries)
 
 
-@app.route('/entries/new/', methods=('GET', 'POST'))
+@app.route('/entries/new/', methods=['GET', 'POST'])
 @login_required
 def entry_create():
     form = forms.EntryForm()
@@ -128,21 +128,21 @@ def entry_create():
     return render_template('new.html', form=form)
 
 
-@app.route('/entries/<user_id>/', methods=('GET', 'POST'))
+@app.route('/entries/<user_id>/', methods=['GET', 'POST'])
 # @login_required
 def entry_detail(user_id=None):
     user = models.User.get(models.User.username == user_id)
     return render_template('detail.html', user=user)
 
 
-@app.route('/entries/<user_id>/edit/', methods=('GET', 'POST'))
+@app.route('/entries/<user_id>/edit/', methods=['GET', 'POST'])
 # @login_required
 def entry_edit(user_id):
     user = models.User.get(models.User.username == user_id)
     return render_template('edit.html', user=user)
 
 
-@app.route('/entries/<user_id>/delete/', methods=('GET', 'POST'))
+@app.route('/entries/<user_id>/delete/', methods=['GET', 'POST'])
 # @login_required
 def entry_delete(user_id):
     entry = models.User.get(models.User.username == user_id)
