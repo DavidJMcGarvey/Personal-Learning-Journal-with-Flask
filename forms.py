@@ -21,16 +21,16 @@ def email_exists(form, field):
 
 class EntryForm(FlaskForm):
     title = StringField(
-        'Title',
+        'Title!!!',
         validators=[
             DataRequired()
         ])
-    date = StringField(
+    date = DateTimeField(
         'Date',
         validators=[
             DataRequired()
         ])
-    time = StringField(
+    time = IntegerField(
         'Time (in minutes)',
         validators=[
             DataRequired()

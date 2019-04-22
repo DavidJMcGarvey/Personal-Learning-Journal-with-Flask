@@ -15,6 +15,16 @@ class User(UserMixin, Model):
     class Meta:
         database = DATABASE
 
+    def get_entry(self):
+        """Gets entry"""
+        return (
+            User.select().join(
+                Relationship, on=Relationship.cur_user
+            ).wehre(
+                Relationship.user_entry == self
+            )
+        )
+
     @classmethod
     def create_user(cls, username, email, password):
         try:
@@ -30,6 +40,7 @@ class User(UserMixin, Model):
 
 class Entry(Model):
     """Subclass of Model that creates entry """
+    user = ForeignKeyField(model=User, backref='entries')
     title = CharField()
     date = DateTimeField()
     time = IntegerField()
@@ -47,6 +58,17 @@ class Entry(Model):
             time=time,
             learned=learned,
             resources=resources
+        )
+
+
+class Relationship(Model):
+    cur_user = ForeignKeyField(User, backref='user')
+    user_entry = ForeignKeyField(Entry, backref='entry_of_user')
+
+    class Meta:
+        database = DATABASE
+        indexes = (
+            (('cur_user', 'user_entry'), True),
         )
 
 

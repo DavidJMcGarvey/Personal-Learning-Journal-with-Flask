@@ -99,16 +99,10 @@ def logout():
 
 
 @app.route('/')
+@app.route('/entries/')
 def index():
-    form = models.Entry.select()
-    return render_template('index.html', form=form)
-
-
-@app.route('/entries/', methods=['GET', 'POST'])
-@login_required
-def list_entries():
     entries = models.Entry.select()
-    return render_template('detail.html', entries=entries)
+    return render_template('index.html', entries=entries)
 
 
 @app.route('/entries/new/', methods=['GET', 'POST'])
@@ -116,39 +110,50 @@ def list_entries():
 def entry_create():
     form = forms.EntryForm()
     if form.validate_on_submit():
-        models.Entry.create_entry(
-            title=form.title.data,
-            date=form.date.data,
-            time=form.time.data,
-            learned=form.learned.data,
-            resources=form.resources.data
-        )
-        flash("You've created a new entry!", "success")
-        return redirect(url_for('index'))
+        try:
+            models.Entry.create_entry(
+                title=form.title.data,
+                date=form.date.data,
+                time=form.time.data,
+                learned=form.learned.data,
+                resources=form.resources.data
+            )
+            flash("You've created a new entry!", "success")
+            return redirect(url_for('index'))
+        except models.IntegrityError:
+            flash("Entry not valid", "error")
     return render_template('new.html', form=form)
 
 
 @app.route('/entries/<user_id>/', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def entry_detail(user_id=None):
     user = models.User.get(models.User.username == user_id)
     return render_template('detail.html', user=user)
 
 
 @app.route('/entries/<user_id>/edit/', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def entry_edit(user_id):
     user = models.User.get(models.User.username == user_id)
     return render_template('edit.html', user=user)
 
 
 @app.route('/entries/<user_id>/delete/', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def entry_delete(user_id):
-    entry = models.User.get(models.User.username == user_id)
-    return render_template('delete.html', entry=entry)
+    user = models.User.get(models.User.username == user_id)
+    return render_template('delete.html', user=user)
 
 
 if __name__ == '__main__':
     models.initialize()
+    try:
+        models.User.create_user(
+            username='Dave',
+            email='dave@test.com',
+            password='password'
+        )
+    except ValueError:
+        pass
     app.run(debug=DEBUG, port=PORT, host=HOST)

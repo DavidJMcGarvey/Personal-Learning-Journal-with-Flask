@@ -14,6 +14,12 @@
         <header>
             <div class="container">
                 <div class="site-header">
+                    {% if current_user.is_authenticated %}
+                    <a class="logo"><span class="welcome">Welcome to your personal learning journal {{ current_user.username.title() }}!</span></a>
+                    <a class="button icon-right" href="/logout/"><span>Log Out {{ current_user.email }}</span></a>
+                    {% else %}
+                    <a class="button icon-right" href="/login/"><span>Sign In / Sign Up</span></a>
+                    {% endif %}
                     <a class="logo" href="/"><i class="material-icons">library_books</i></a>
                     <a class="button icon-right" href="/entries/new"><span>New Entry</span> <i class="material-icons">add</i></a>
                 </div>
