@@ -120,7 +120,7 @@ def entry_create():
             )
             flash("You've created a new entry!", "success")
             return redirect(url_for('index'))
-        except models.IntegrityError:
+        except IntegrityError:
             flash("Entry not valid", "error")
     return render_template('new.html', form=form)
 
