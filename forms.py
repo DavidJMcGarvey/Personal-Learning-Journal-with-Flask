@@ -1,7 +1,6 @@
 """Forms for Login, Registration, and Entry"""
-
 from flask_wtf import FlaskForm
-from wtforms import (StringField, PasswordField, TextAreaField, DateTimeField,
+from wtforms import (StringField, PasswordField, TextAreaField, DateField,
                      IntegerField)
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
                                 Length, EqualTo)
@@ -21,12 +20,13 @@ def email_exists(form, field):
 
 class EntryForm(FlaskForm):
     title = StringField(
-        'Title!!!',
+        'Title',
         validators=[
             DataRequired()
         ])
-    date = DateTimeField(
-        'Date',
+    date = DateField(
+        'Date (YYYY-MM-DD)',
+        format='%Y-%m-%d',
         validators=[
             DataRequired()
         ])
@@ -36,12 +36,12 @@ class EntryForm(FlaskForm):
             DataRequired()
         ])
     learned = TextAreaField(
-        'What I Learned',
+        'Learned',
         validators=[
             DataRequired()
         ])
     resources = TextAreaField(
-        'Resources to Remember',
+        'Resources',
         validators=[
             DataRequired()
         ])

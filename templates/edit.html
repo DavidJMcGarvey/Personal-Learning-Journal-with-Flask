@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+{% from 'macros.html' import render_field %}
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -13,6 +14,13 @@
     <body>
         <header>
             <div class="container">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="notification {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 <div class="site-header">
                     {% if current_user.is_authenticated %}
                     <a class="logo"><span class="welcome">Welcome to your personal learning journal {{ current_user.username.title() }}!</span></a>
@@ -29,6 +37,8 @@
             <div class="container">
                 <div class="edit-entry">
                     <h2>Edit Entry</h2>
+
+                    <!-- Original content -->
                     <form>
                         <label for="title"> Title</label>
                         <input id="title" type="text" name="title"><br>
@@ -43,6 +53,7 @@
                         <input type="submit" value="Publish Entry" class="button">
                         <a href="#" class="button button-secondary">Cancel</a>
                     </form>
+                    <!-- End original content -->
                 </div>
             </div>
         </section>

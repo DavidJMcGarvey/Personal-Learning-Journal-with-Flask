@@ -15,16 +15,6 @@ class User(UserMixin, Model):
     class Meta:
         database = DATABASE
 
-    def get_entry(self):
-        """Gets entry"""
-        return (
-            User.select().join(
-                Relationship, on=Relationship.cur_user
-            ).wehre(
-                Relationship.user_entry == self
-            )
-        )
-
     @classmethod
     def create_user(cls, username, email, password):
         try:
@@ -40,35 +30,29 @@ class User(UserMixin, Model):
 
 class Entry(Model):
     """Subclass of Model that creates entry """
-    user = ForeignKeyField(model=User, backref='entries')
+    user = ForeignKeyField(model=User, backref='entry')
     title = CharField()
-    date = DateTimeField()
+    date = DateField()
     time = IntegerField()
     learned = TextField()
     resources = TextField()
 
     class Meta:
         database = DATABASE
+        order_by = ('-date',)
+
+    def get_entry(self):
+        return Entry.select().where(Entry.user == self)
 
     @classmethod
-    def create_entry(cls, title, date, time, learned, resources):
+    def create_entry(cls, user, title, date, time, learned, resources):
         cls.create(
+            user=user,
             title=title,
             date=date,
             time=time,
             learned=learned,
-            resources=resources
-        )
-
-
-class Relationship(Model):
-    cur_user = ForeignKeyField(User, backref='user')
-    user_entry = ForeignKeyField(Entry, backref='entry_of_user')
-
-    class Meta:
-        database = DATABASE
-        indexes = (
-            (('cur_user', 'user_entry'), True),
+            resources=resources,
         )
 
 

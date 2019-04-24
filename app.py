@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """Personal Learning Journal w/ FLASK
 This is a web app build with Flask that allows user to add journal entries
 Journal entries consist of following fields: title, date, time,
@@ -6,7 +8,6 @@ what was learned, and resources to remember.
 Created: 2019-04-11
 Updated: 2019-04-17
 Author: David McGarvey"""
-
 from flask import Flask, g, render_template, flash, redirect, url_for
 from flask_bcrypt import check_password_hash
 from flask_login import (LoginManager, login_user, logout_user,
@@ -98,11 +99,11 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/')
-@app.route('/entries/')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/entries/', methods=['GET', 'POST'])
 def index():
-    entries = models.Entry.select()
-    return render_template('index.html', entries=entries)
+    form = models.Entry.select()
+    return render_template('index.html', form=form)
 
 
 @app.route('/entries/new/', methods=['GET', 'POST'])
@@ -112,16 +113,19 @@ def entry_create():
     if form.validate_on_submit():
         try:
             models.Entry.create_entry(
+                user=g.user._get_current_object(),
                 title=form.title.data,
                 date=form.date.data,
                 time=form.time.data,
                 learned=form.learned.data,
-                resources=form.resources.data
+                resources=form.resources.data,
             )
             flash("You've created a new entry!", "success")
             return redirect(url_for('index'))
         except IntegrityError:
             flash("Entry not valid", "error")
+    else:
+        print("The Title is: {}".format(form.title.data))
     return render_template('new.html', form=form)
 
 
@@ -129,14 +133,16 @@ def entry_create():
 @login_required
 def entry_detail(user_id=None):
     user = models.User.get(models.User.username == user_id)
-    return render_template('detail.html', user=user)
+    form = models.Entry.get()
+    return render_template('detail.html', user=user, form=form)
 
 
 @app.route('/entries/<user_id>/edit/', methods=['GET', 'POST'])
 @login_required
 def entry_edit(user_id):
     user = models.User.get(models.User.username == user_id)
-    return render_template('edit.html', user=user)
+    form = models.Entry.get()
+    return render_template('edit.html', user=user, form=form)
 
 
 @app.route('/entries/<user_id>/delete/', methods=['GET', 'POST'])
