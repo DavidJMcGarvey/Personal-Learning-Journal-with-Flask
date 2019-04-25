@@ -144,12 +144,13 @@ def entry_edit(user_id):
     return render_template('edit.html', user=user, form=form)
 
 
-@app.route('/entries/<user_id>/delete/', methods=['GET', 'POST'])
+@app.route('/entries/<title_id>/delete/', methods=['GET', 'POST'])
 @login_required
-def entry_delete(user_id):
-    user = models.User.get(models.User.username == user_id)
-    models.Entry.get().delete_instance()
-    return render_template('index.html', user=user)
+def entry_delete(title_id):
+    models.Entry.get(models.Entry.title == title_id).delete_instance()
+    form = models.Entry.select()
+    flash("Entry successfully deleted!", "success")
+    return render_template('index.html', form=form)
 
 
 if __name__ == '__main__':
