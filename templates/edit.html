@@ -40,11 +40,17 @@
                     <!-- Dave Attempt -->
                     {% block content %}
                     <form method="POST" action="">
-                        {{ render_field(field.form.title) }}
+                        {{ render_field(form.title) }}
+                        {{ render_field(form.date) }}
+                        {{ render_field(form.time) }}
+                        {{ render_field(form.learned) }}
+                        {{ render_field(form.resources) }}
+                        <button type="submit" id="submit" class="button">Edit Dude!</button>
+                        <a href="#" class="button button-secondary">Cancel</a>
                     </form>
                     {% endblock %}
                     <!-- End Attempt -->
-                    <!-- Original content -->
+                    <!-- Original content
                     <form>
                         <label for="title"> title</label>
                         <input id="title" type="text" name="title"><br>
@@ -59,7 +65,7 @@
                         <input type="submit" value="Publish Entry" class="button">
                         <a href="#" class="button button-secondary">Cancel</a>
                     </form>
-                    <!-- End original content -->
+                    End original content -->
                 </div>
             </div>
         </section>

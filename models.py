@@ -44,8 +44,9 @@ class Entry(UserMixin, Model):
     def get_entry(self):
         return Entry.select().where(Entry.user == self)
 
-    def edit_entry(self):
-        pass
+    def edit_entry(self, user, title, date, time, learned, resources):
+        entry = Entry.select().where(Entry.user == self)
+        entry.update()
 
     @classmethod
     def create_entry(cls, user, title, date, time, learned, resources):

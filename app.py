@@ -54,6 +54,7 @@ def after_request(response):
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
+
     form = forms.LoginForm()
     if form.validate_on_submit():
         try:
@@ -136,12 +137,23 @@ def entry_detail(title_id):
     return render_template('detail.html', form=form)
 
 
-@app.route('/entries/<user_id>/edit/', methods=['GET', 'POST'])
+#########
+@app.route('/entries/<title_id>/edit/', methods=['GET', 'POST'])
 @login_required
-def entry_edit(user_id):
-    user = models.User.get(models.User.username == user_id)
-    form = models.Entry.get()
-    return render_template('edit.html', user=user, form=form)
+def entry_edit(title_id):
+    form = forms.EntryForm()
+    # entry = models.Entry.get(models.Entry.title == title_id)
+    if form.validate_on_submit():
+        models.Entry.edit_entry(
+            user=g.user._get_current_object(),
+            title=form.title.data,
+            date=form.date.data,
+            time=form.time.data,
+            learned=form.learned.data,
+            resources=form.resources.data
+        )
+    return render_template('edit.html', form=form)
+#########
 
 
 @app.route('/entries/<title_id>/delete/', methods=['GET', 'POST'])
