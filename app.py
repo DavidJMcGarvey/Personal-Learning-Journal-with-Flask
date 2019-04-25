@@ -129,12 +129,11 @@ def entry_create():
     return render_template('new.html', form=form)
 
 
-@app.route('/entries/<user_id>/', methods=['GET', 'POST'])
+@app.route('/entries/<title_id>/', methods=['GET', 'POST'])
 @login_required
-def entry_detail(user_id=None):
-    user = models.User.get(models.User.username == user_id)
-    form = models.Entry.get()
-    return render_template('detail.html', user=user, form=form)
+def entry_detail(title_id):
+    form = models.Entry.get(models.Entry.title == title_id)
+    return render_template('detail.html', form=form)
 
 
 @app.route('/entries/<user_id>/edit/', methods=['GET', 'POST'])
@@ -149,7 +148,8 @@ def entry_edit(user_id):
 @login_required
 def entry_delete(user_id):
     user = models.User.get(models.User.username == user_id)
-    return render_template('delete.html', user=user)
+    models.Entry.get().delete_instance()
+    return render_template('index.html', user=user)
 
 
 if __name__ == '__main__':

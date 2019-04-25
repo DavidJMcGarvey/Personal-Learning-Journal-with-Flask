@@ -37,10 +37,16 @@
             <div class="container">
                 <div class="edit-entry">
                     <h2>Edit Entry</h2>
-
+                    <!-- Dave Attempt -->
+                    {% block content %}
+                    <form method="POST" action="">
+                        {{ render_field(field.form.title) }}
+                    </form>
+                    {% endblock %}
+                    <!-- End Attempt -->
                     <!-- Original content -->
                     <form>
-                        <label for="title"> Title</label>
+                        <label for="title"> title</label>
                         <input id="title" type="text" name="title"><br>
                         <label for="date">Date</label>
                         <input id="date" type="date" name="date"><br>

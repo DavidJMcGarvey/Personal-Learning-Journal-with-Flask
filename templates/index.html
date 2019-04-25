@@ -40,8 +40,8 @@
                 <div class="entry-list">
                     {% for field in form %}
                     <article>
-                        <h2><a href="/entries/{{current_user.username }}">{{ field.title }}</a></h2>
-                        <time datetime="2016-01-31">{{ field.date }}</time>
+                        <h2><a href="/entries/{{ field.title }}/">{{ field.title }}</a></h2>
+                        <time datetime="{{ field.date }}">{{ field.date }}</time>
                     </article>
                     {% endfor %}
                 </div>

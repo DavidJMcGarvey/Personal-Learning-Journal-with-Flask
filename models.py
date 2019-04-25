@@ -28,9 +28,9 @@ class User(UserMixin, Model):
             raise ValueError("User already exists")
 
 
-class Entry(Model):
+class Entry(UserMixin, Model):
     """Subclass of Model that creates entry """
-    user = ForeignKeyField(model=User, backref='entry')
+    user = ForeignKeyField(model=User, backref='user')
     title = CharField()
     date = DateField()
     time = IntegerField()
@@ -43,6 +43,9 @@ class Entry(Model):
 
     def get_entry(self):
         return Entry.select().where(Entry.user == self)
+
+    def edit_entry(self):
+        pass
 
     @classmethod
     def create_entry(cls, user, title, date, time, learned, resources):
