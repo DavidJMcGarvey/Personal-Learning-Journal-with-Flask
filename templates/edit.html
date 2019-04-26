@@ -34,21 +34,33 @@
             </div>
         </header>
         <section>
-            <div class="container">
+                 <div class="entry-list single">
+                    {% if entry %}
+                    <h3>Old Entry</h3>
+                    <p>Title: {{ entry.title }}</p>
+                    <p>Date: {{ entry.date }}</p>
+                    <p>Time Spent: {{ entry.time }} Minutes</p>
+                    <p>Learned: {{ entry.learned }}</p>
+                    <p>Resources: {{ entry.resources }}</p>
+                    {% else %}
+                    <h3>Review changes and click one of the links above to continue</h3>
+                    {% endif %}
+                </div>
                 <div class="edit-entry">
                     <h2>Edit Entry</h2>
                     <!-- Dave Attempt -->
                     {% block content %}
                     <form method="POST" action="">
-                        {{ render_field(form.title) }}
-                        {{ render_field(form.date) }}
-                        {{ render_field(form.time) }}
-                        {{ render_field(form.learned) }}
-                        {{ render_field(form.resources) }}
+                        {% with entry=entry %}
+                        {% for field in form %}
+                            {{ render_field(field) }}
+                        {% endfor %}
+                        {% endwith %}
                         <button type="submit" id="submit" class="button">Edit Dude!</button>
-                        <a href="#" class="button button-secondary">Cancel</a>
+                        <a href="/entries/" class="button button-secondary">Cancel</a>
                     </form>
                     {% endblock %}
+
                     <!-- End Attempt -->
                     <!-- Original content
                     <form>

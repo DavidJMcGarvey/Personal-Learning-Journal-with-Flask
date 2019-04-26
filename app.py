@@ -6,7 +6,7 @@ Journal entries consist of following fields: title, date, time,
 what was learned, and resources to remember.
 
 Created: 2019-04-11
-Updated: 2019-04-17
+Updated: 2019-04-26
 Author: David McGarvey"""
 from flask import Flask, g, render_template, flash, redirect, url_for
 from flask_bcrypt import check_password_hash
@@ -103,7 +103,7 @@ def logout():
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/entries/', methods=['GET', 'POST'])
 def index():
-    form = models.Entry.select()
+    form = models.Entry.select().order_by(models.Entry.date.desc())
     return render_template('index.html', form=form)
 
 
@@ -137,14 +137,15 @@ def entry_detail(title_id):
     return render_template('detail.html', form=form)
 
 
-#########
+# Current view under construction #
 @app.route('/entries/<title_id>/edit/', methods=['GET', 'POST'])
 @login_required
 def entry_edit(title_id):
+    entry = models.Entry.get(models.Entry.title == title_id)
     form = forms.EntryForm()
-    # entry = models.Entry.get(models.Entry.title == title_id)
     if form.validate_on_submit():
-        models.Entry.edit_entry(
+        entry.delete_instance()
+        entry = models.Entry.create_entry(
             user=g.user._get_current_object(),
             title=form.title.data,
             date=form.date.data,
@@ -152,7 +153,8 @@ def entry_edit(title_id):
             learned=form.learned.data,
             resources=form.resources.data
         )
-    return render_template('edit.html', form=form)
+        flash("Edit successful!", "success")
+    return render_template('edit.html', entry=entry, form=form)
 #########
 
 

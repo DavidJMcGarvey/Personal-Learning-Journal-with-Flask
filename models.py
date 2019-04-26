@@ -39,12 +39,11 @@ class Entry(UserMixin, Model):
 
     class Meta:
         database = DATABASE
-        order_by = ('-date',)
 
     def get_entry(self):
         return Entry.select().where(Entry.user == self)
 
-    def edit_entry(self, user, title, date, time, learned, resources):
+    def edit_entry(self):
         entry = Entry.select().where(Entry.user == self)
         entry.update()
 
