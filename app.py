@@ -137,24 +137,48 @@ def entry_detail(title_id):
     return render_template('detail.html', form=form)
 
 
-# Current view under construction #
-@app.route('/entries/<title_id>/edit/', methods=['GET', 'POST'])
+# Dave Attempt #
+@app.route('/entries/<title_id>/edit', methods=['GET', 'POST'])
 @login_required
 def entry_edit(title_id):
-    entry = models.Entry.get(models.Entry.title == title_id)
-    form = forms.EntryForm()
+    try:
+        entry = models.Entry.get(models.Entry.title == title_id)
+        form = forms.EntryForm(obj=entry)
+        form.validate()
+    except models.DoesNotExist:
+        redirect(url_for('index', title_id=title_id))
     if form.validate_on_submit():
-        entry.delete_instance()
-        entry = models.Entry.create_entry(
-            user=g.user._get_current_object(),
-            title=form.title.data,
-            date=form.date.data,
-            time=form.time.data,
-            learned=form.learned.data,
-            resources=form.resources.data
-        )
+        entry.user = g.user._get_current_object()
+        entry.title = form.title.data
+        entry.date = form.date.data
+        entry.time = form.time.data
+        entry.learned = form.learned.data
+        entry.resources = form.resources.data
+        title_id = form.title.data
+        entry.save()
         flash("Edit successful!", "success")
-    return render_template('edit.html', entry=entry, form=form)
+        return redirect(url_for('entry_detail', title_id=title_id))
+    return render_template('edit.html', form=form, entry=entry, title_id=title_id)
+
+
+# Weird Edit view under construction #
+# @app.route('/entries/<title_id>/edit/', methods=['GET', 'POST'])
+# @login_required
+# def entry_edit(title_id):
+#     entry = models.Entry.get(models.Entry.title == title_id)
+#     form = forms.EntryForm()
+#     if form.validate_on_submit():
+#         entry.delete_instance()
+#         entry = models.Entry.create_entry(
+#             user=g.user._get_current_object(),
+#             title=form.title.data,
+#             date=form.date.data,
+#             time=form.time.data,
+#             learned=form.learned.data,
+#             resources=form.resources.data
+#         )
+#         flash("Edit successful!", "success")
+#     return render_template('edit.html', entry=entry, form=form)
 #########
 
 

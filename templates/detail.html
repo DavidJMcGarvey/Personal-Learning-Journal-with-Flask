@@ -13,6 +13,13 @@
     <body>
         <header>
             <div class="container">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="notification {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 <div class="site-header">
                     {% if current_user.is_authenticated %}
                     <a class="logo"><span class="welcome">Welcome to your personal learning journal {{ current_user.username.title() }}!</span></a>
