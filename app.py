@@ -1,13 +1,5 @@
 #!/usr/bin/env python
-
-"""Personal Learning Journal w/ FLASK
-This is a web app build with Flask that allows user to add journal entries
-Journal entries consist of following fields: title, date, time,
-what was learned, and resources to remember.
-
-Created: 2019-04-11
-Updated: 2019-04-26
-Author: David McGarvey"""
+"""Personal Learning Journal w/ FLASK"""
 from flask import Flask, g, render_template, flash, redirect, url_for
 from flask_bcrypt import check_password_hash
 from flask_login import (LoginManager, login_user, logout_user,
@@ -54,7 +46,7 @@ def after_request(response):
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-
+    """View to login user and catch exceptions"""
     form = forms.LoginForm()
     if form.validate_on_submit():
         try:
@@ -74,6 +66,7 @@ def login():
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
+    """View to register a user and prevents duplicates"""
     form = forms.RegisterForm()
     if form.validate_on_submit():
         try:
@@ -95,6 +88,7 @@ def register():
 @app.route('/logout/', methods=['GET', 'POST'])
 @login_required
 def logout():
+    """Logs current user out"""
     logout_user()
     flash("You've been logged out. Come back soon!", "success")
     return redirect(url_for('index'))
@@ -103,6 +97,7 @@ def logout():
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/entries/', methods=['GET', 'POST'])
 def index():
+    """Home page listing entries by date"""
     form = models.Entry.select().order_by(models.Entry.date.desc())
     return render_template('index.html', form=form)
 
@@ -110,6 +105,7 @@ def index():
 @app.route('/entries/new/', methods=['GET', 'POST'])
 @login_required
 def entry_create():
+    """View to create an Entry from the Entry Form and is stored in Database"""
     form = forms.EntryForm()
     if form.validate_on_submit():
         try:
@@ -125,22 +121,21 @@ def entry_create():
             return redirect(url_for('index'))
         except IntegrityError:
             flash("Entry not valid", "error")
-    else:
-        print("The Title is: {}".format(form.title.data))
     return render_template('new.html', form=form)
 
 
 @app.route('/entries/<title_id>/', methods=['GET', 'POST'])
 @login_required
 def entry_detail(title_id):
+    """View that shows details from an entry"""
     form = models.Entry.get(models.Entry.title == title_id)
     return render_template('detail.html', form=form)
 
 
-# Dave Attempt #
 @app.route('/entries/<title_id>/edit', methods=['GET', 'POST'])
 @login_required
 def entry_edit(title_id):
+    """Allows user to edit entry from entry's detail page"""
     try:
         entry = models.Entry.get(models.Entry.title == title_id)
         form = forms.EntryForm(obj=entry)
@@ -155,36 +150,17 @@ def entry_edit(title_id):
         entry.learned = form.learned.data
         entry.resources = form.resources.data
         title_id = form.title.data
-        entry.save()
+        entry.edit_entry()
         flash("Edit successful!", "success")
         return redirect(url_for('entry_detail', title_id=title_id))
-    return render_template('edit.html', form=form, entry=entry, title_id=title_id)
-
-
-# Weird Edit view under construction #
-# @app.route('/entries/<title_id>/edit/', methods=['GET', 'POST'])
-# @login_required
-# def entry_edit(title_id):
-#     entry = models.Entry.get(models.Entry.title == title_id)
-#     form = forms.EntryForm()
-#     if form.validate_on_submit():
-#         entry.delete_instance()
-#         entry = models.Entry.create_entry(
-#             user=g.user._get_current_object(),
-#             title=form.title.data,
-#             date=form.date.data,
-#             time=form.time.data,
-#             learned=form.learned.data,
-#             resources=form.resources.data
-#         )
-#         flash("Edit successful!", "success")
-#     return render_template('edit.html', entry=entry, form=form)
-#########
+    return render_template('edit.html', form=form, entry=entry,
+                           title_id=title_id)
 
 
 @app.route('/entries/<title_id>/delete/', methods=['GET', 'POST'])
 @login_required
 def entry_delete(title_id):
+    """Deletes the Entry instance from ebntry's detail page"""
     models.Entry.get(models.Entry.title == title_id).delete_instance()
     form = models.Entry.select()
     flash("Entry successfully deleted!", "success")

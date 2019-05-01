@@ -29,7 +29,7 @@ class User(UserMixin, Model):
 
 
 class Entry(UserMixin, Model):
-    """Subclass of Model that creates entry """
+    """Subclass of Model that creates entry"""
     user = ForeignKeyField(model=User, backref='user')
     title = CharField()
     date = DateField()
@@ -43,20 +43,12 @@ class Entry(UserMixin, Model):
     def get_entry(self):
         return Entry.select().where(Entry.user == self)
 
+    def edit_entry(self):
+        self.save()
+
     @classmethod
     def create_entry(cls, user, title, date, time, learned, resources):
         cls.create(
-            user=user,
-            title=title,
-            date=date,
-            time=time,
-            learned=learned,
-            resources=resources,
-        )
-
-    @classmethod
-    def edit_entry(cls, user, title, date, time, learned, resources):
-        cls.update(
             user=user,
             title=title,
             date=date,

@@ -19,6 +19,7 @@ def email_exists(form, field):
 
 
 class EntryForm(FlaskForm):
+    """FlaskForm for Entry information"""
     title = StringField(
         'Title',
         validators=[
@@ -48,6 +49,7 @@ class EntryForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
+    """FlaskForm for Registration information"""
     username = StringField(
         'Username',
         validators=[
@@ -69,7 +71,7 @@ class RegisterForm(FlaskForm):
         'Password',
         validators=[
             DataRequired(),
-            Length(min=2),
+            Length(min=7),
             EqualTo('password2', message='Password must match')
         ])
     password2 = PasswordField(
@@ -80,6 +82,7 @@ class RegisterForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
+    """FlaskForm for Login information"""
     email = StringField(
         'Email',
         validators=[

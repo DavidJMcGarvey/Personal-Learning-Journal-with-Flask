@@ -1,5 +1,4 @@
 {% from 'macros.html' import render_field %}
-
 <div>
 {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
@@ -16,7 +15,6 @@
 	{% endfor %}
 	<button class="button icon-center" type="submit" id="submit">Login!</button>
 </form>
-
 <p>Not registered yet?</p>
 <button class="button icon-center"><a href="/register/" class="button icon-center">Register!</a></button>
 
